@@ -1,0 +1,19 @@
+{
+  "name": "newapp",
+  "version": "1.0.0",
+  "description": "nwe app",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "Sara zanotto",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
