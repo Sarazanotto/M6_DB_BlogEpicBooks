@@ -24,6 +24,11 @@ const bookByTitle= async(title)=>{
   return book
 }
 
+const bookByCategory= async(category)=>{
+  const book= await BookSchema.find({category: category})
+  return book
+}
+
 const bookCreate = async (body) => {
   const newBook = new BookSchema(body);
   const bookSaved = await newBook.save();
@@ -43,6 +48,7 @@ module.exports = {
   bookAll,
   bookById,
   bookByTitle,
+  bookByCategory,
   bookCreate,
   bookModify,
   bookDelete,

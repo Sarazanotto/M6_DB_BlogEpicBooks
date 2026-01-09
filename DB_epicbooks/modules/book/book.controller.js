@@ -65,11 +65,38 @@ const findByTitle = async (req, res) => {
         statusCode: 200,
         book,
       });
-    }const allBook= bookService.bookAll(page, pageSize)
-    return res.status(200).send({
-      statusCode:200,
-      allBook
-    })
+    }
+    const allBook = bookService.bookAll(page, pageSize);
+    res.status(200).send({
+      statusCode: 200,
+      message: "title not found",
+      allBook,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      statusCode: 500,
+      message: " Error during the request",
+    });
+  }
+};
+
+const findByCategory = async (req, res) => {
+  try {
+    const { category } = req.query;
+    const book = await bookService.bookByCategory(category);
+    if (category) {
+      return res.status(200).send({
+        book,
+        statusCode: 200,
+      });
+    }
+    const allBook = bookService.allBook(page, pageSize);
+    res.status(200).send({
+      statusCode: 200,
+      message: "category not found",
+      allBook,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({
@@ -96,6 +123,25 @@ const create = async (req, res) => {
     });
   }
 };
+
+const uploadFile=async(req,res)=>{
+  try {
+    const url= `${req.protocol}://${req.get('host')}`
+const fileName= req.file.filename
+
+res.status(200).json({
+  cover:`${url}/uploads/${fileName}`
+
+})
+
+  } catch (error) {
+      console.error(error);
+    res.status(500).send({
+      statusCode: 500,
+      message: " Error during the request",
+    });
+  }
+}
 
 const modify = async (req, res) => {
   try {
@@ -144,7 +190,9 @@ module.exports = {
   findAll,
   findOne,
   findByTitle,
+  findByCategory,
   create,
+  uploadFile,
   modify,
   deleteOne,
 };
