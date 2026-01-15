@@ -1,6 +1,8 @@
+const AuthorCollectionEmpty = require("../../middlewares/expectation/author/authorCollectionEmpty");
+const AuthorNotFound = require("../../middlewares/expectation/author/authorNotFound");
 const authorService = require("./author.service");
 
-const findAll = async (req, res) => {
+const findAll = async (req, res, next) => {
   try {
     const { page = 1, pageSize = 20 } = req.query;
     const { users, totalUser, totalPages } = await authorService.authorAll(
@@ -8,28 +10,22 @@ const findAll = async (req, res) => {
       pageSize
     );
     if (users.length === 0) {
-      return res.status(404).send({
-        statusCode: 404,
-        message: "Name not found",
-      });
+    throw new AuthorCollectionEmpty()
     }
     res.status(200).send({
       statusCode: 200,
       users,
       totalPages,
       totalUser,
-      page,pageSize
+      page,
+      pageSize,
     });
   } catch (error) {
-    console.error(error)
-    res.status(500).send({
-      statusCode: 500,
-      message: "Error during the request",
-    });
+   next(error)
   }
 };
 
-const findOne = async (req, res) => {
+const findOne = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -40,24 +36,18 @@ const findOne = async (req, res) => {
     }
     const user = await authorService.authorById(id);
     if (!user) {
-      return res.status(404).send({
-        statusCode: 404,
-        message: "User not found",
-      });
+   throw new AuthorNotFound()
     }
     res.status(200).send({
       statusCode: 200,
       user,
     });
   } catch (error) {
-    res.status(500).send({
-      statusCode: 500,
-      message: "Error during the request",
-    });
+    next(error)
   }
 };
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   try {
     const { body } = req;
     const newUser = await authorService.authorCreate(body);
@@ -67,29 +57,31 @@ const create = async (req, res) => {
       newUser,
     });
   } catch (error) {
-    res.status(500).send({
-      statusCode: 500,
-      message: "Error during the request",
-    });
+    next(error)
   }
 };
 
-const modify = async (req, res) => {
+const uploadFileCloudinary = async (req, res, next) => {
+  try {
+const {id}= req.params
+const url=req.file.path
+const updateAvatar= await authorService.authorUpdateAvatar(id,url)
+res.status(200).json({statusCode:200, updateAvatar})
+  } catch (error) {
+    next(error)
+  }
+};
+
+const modify = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { body } = req;
     if (!id) {
-      return res.status(404).send({
-        statusCode: 404,
-        message: "Invalid userId",
-      });
+     throw new AuthorNotFound()
     }
     const user = await authorService.authorModify(id, body);
     if (!user) {
-      return res.status(404).send({
-        statusCode: 404,
-        message: "user not found",
-      });
+    throw new AuthorNotFound()
     }
     res.status(200).send({
       statusCode: 200,
@@ -98,21 +90,15 @@ const modify = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send({
-      statusCode: 500,
-      message: "Error during the request",
-    });
+    next(error)
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(404).send({
-        statusCode: 404,
-        messagge: "Invalid userId",
-      });
+       throw new AuthorNotFound()
     }
     const user = await authorService.authorDelete(id);
     res.status(200).send({
@@ -120,10 +106,7 @@ const deleteUser = async (req, res) => {
       user,
     });
   } catch (error) {
-    res.status(500).send({
-      statusCode: 500,
-      message: "Error during the request",
-    });
+    next(error)
   }
 };
 
@@ -131,6 +114,7 @@ module.exports = {
   findAll,
   findOne,
   create,
+  uploadFileCloudinary,
   modify,
   deleteUser,
 };

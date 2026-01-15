@@ -1,4 +1,7 @@
+const { upload } = require("../../middlewares/uploads");
 const AuthorSchema = require("./author.schema");
+const bcrypt= require('bcrypt')
+
 
 const authorAll = async (page, pageSize) => {
   const users = await AuthorSchema.find()
@@ -21,10 +24,18 @@ const authorById = async (id) => {
 };
 
 const authorCreate = async (body) => {
-  const newUser = new AuthorSchema(body);
+  const saltRounds= 10
+  const newUser = new AuthorSchema({body,
+    password: await bcrypt.hash(body.password.saltRounds)
+  });
   const userSaved = await newUser.save();
   return userSaved;
 };
+
+const authorUpdateAvatar= async(id,url)=>{
+  const user= await AuthorSchema.findByIdAndUpdate(id, {avatar:url},{new:true})
+  return user
+}
 
 const authorModify = async (id, body) => {
   const user = await AuthorSchema.findByIdAndUpdate(id, body, { new: true });
@@ -40,6 +51,7 @@ module.exports = {
   authorAll,
   authorById,
   authorCreate,
+  authorUpdateAvatar,
   authorModify,
   authorDelete,
 };
