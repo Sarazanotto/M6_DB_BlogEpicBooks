@@ -1,3 +1,4 @@
+const { upload } = require("../../middlewares/uploads");
 const AuthorSchema = require("./author.schema");
 
 const authorAll = async (page, pageSize) => {
@@ -26,6 +27,11 @@ const authorCreate = async (body) => {
   return userSaved;
 };
 
+const authorUpdateAvatar= async(id,url)=>{
+  const user= await AuthorSchema.findByIdAndUpdate(id, {avatar:url},{new:true})
+  return user
+}
+
 const authorModify = async (id, body) => {
   const user = await AuthorSchema.findByIdAndUpdate(id, body, { new: true });
   return user;
@@ -40,6 +46,7 @@ module.exports = {
   authorAll,
   authorById,
   authorCreate,
+  authorUpdateAvatar,
   authorModify,
   authorDelete,
 };
