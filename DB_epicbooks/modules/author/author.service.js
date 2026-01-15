@@ -40,7 +40,7 @@ const authorUpdateAvatar= async(id,url)=>{
 const authorModify = async (id, body) => {
   const user = await AuthorSchema.findByIdAndUpdate(id, body, { new: true });
   return user;
-};// se la pssw è nel body fai hash
+};
 
 const authorDelete = async (id) => {
   const user = await AuthorSchema.findByIdAndDelete(id);
