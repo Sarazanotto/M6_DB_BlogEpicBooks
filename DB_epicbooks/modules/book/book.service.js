@@ -5,7 +5,7 @@ const bookAll = async (page, pageSize) => {
   const books = await BookSchema.find()
     .limit(pageSize)
     .skip((page - 1) * pageSize)
-    .populate('author')
+    .populate("author")
   const totalBooks = await BookSchema.countDocuments();
   const totalPages = Math.ceil(totalBooks / pageSize);
   return {

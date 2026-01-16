@@ -3,6 +3,8 @@ const AuthorSchema = require("./author.schema");
 const bcrypt= require('bcrypt')
 
 
+
+
 const authorAll = async (page, pageSize) => {
   const users = await AuthorSchema.find()
     .limit(pageSize)
@@ -24,10 +26,10 @@ const authorById = async (id) => {
 };
 
 const authorCreate = async (body) => {
-  const saltRounds= 10
-  const newUser = new AuthorSchema({body,
-    password: await bcrypt.hash(body.password.saltRounds)
-  });
+ 
+  const newUser = new AuthorSchema(body)
+   
+
   const userSaved = await newUser.save();
   return userSaved;
 };
