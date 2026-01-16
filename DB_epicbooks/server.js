@@ -4,6 +4,7 @@ const PORT = 4545;
 const express = require("express");
 const cors = require("cors");
 
+const authenticationRoute= require('./modules/authentication/authentication.route')
 const authorRoute = require("./modules/author/author.route");
 const bookRoute = require("./modules/book/book.route");
 const commentRoute= require ("./modules/comment/comment.route")
@@ -12,11 +13,13 @@ const errorHandler= require ('./middlewares/errorHandler/errorHandler')
 const app = express();
 
 //middleware
+app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 app.use(cors());
-app.use(express.json());
+
 
 //route
+app.use("/",authenticationRoute)
 app.use("/", authorRoute);
 app.use("/", bookRoute);
 app.use("/", commentRoute)
