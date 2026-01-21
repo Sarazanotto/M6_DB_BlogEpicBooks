@@ -109,13 +109,18 @@ const uploadFile = async (req, res,next) => {
 
 const uploadFileId = async (req, res,next) => {
   try {
+     if (!req.file) {
+      return res.status(400).json({ statusCode: 400, message: "Missing file" });
+    }
     const { id } = req.params;
     const url = `${req.protocol}://${req.get("host")}/uploads/${
       req.file.filename
     }`;
     const updateBook = await bookService.bookUploadCover(id, url);
     res.status(200).json({ statusCode: 200, updateBook });
-  } catch (error) {}
+  } catch (error) {
+    next(error)
+  }
 };
 
 const modify = async (req, res,next) => {

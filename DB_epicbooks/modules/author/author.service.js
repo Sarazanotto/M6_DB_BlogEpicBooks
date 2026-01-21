@@ -40,7 +40,9 @@ const authorUpdateAvatar= async(id,url)=>{
 }
 
 const authorModify = async (id, body) => {
-  const user = await AuthorSchema.findByIdAndUpdate(id, body, { new: true });
+  const user = await AuthorSchema.findById(id);
+  Object.assign(user,body)
+  await user.save()
   return user;
 };
 
