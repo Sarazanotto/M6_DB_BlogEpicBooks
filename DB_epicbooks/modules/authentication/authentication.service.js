@@ -15,6 +15,7 @@ const authorLogin = async (email, password) => {
   }
   const token = jwt.sign(
     {
+      id:author._id,
       name: author.name,
       surname: author.surname,
     },
