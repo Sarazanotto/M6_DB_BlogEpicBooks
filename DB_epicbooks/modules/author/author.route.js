@@ -1,14 +1,16 @@
 const express = require("express");
-
 const router = express.Router();
-
 const authorController = require("./author.controller");
-const {cloudUpload}= require ('../../middlewares/uploads/index.js')
+const {cloudAvatar}= require ('../../middlewares/uploads/index.js')
+const auth= require ('../../middlewares/authentication/authUser.js')
 
-router.get("/authors", authorController.findAll);
-router.get('/authors/:id', authorController.findOne)
+router.get("/authors",auth, authorController.findAll);
+router.get('/authors/:id',auth, authorController.findOne)
+router.post('/authors/upload',cloudAvatar.single('avatar'),authorController.uploadFile)
 router.post('/authors', authorController.create)
-router.patch('/authors/:id', authorController.modify)
-router.delete('/authors/:id', authorController.deleteUser)
-router.patch('/authors/:id/avatar', cloudUpload.single('avatar'),authorController.uploadFileCloudinary)
+router.patch('/authors/:id/avatar',auth, cloudAvatar.single('avatar'),authorController.uploadFileId)
+router.patch('/authors/:id',auth, authorController.modify)
+router.delete('/authors/:id',auth, authorController.deleteUser)
+
+
 module.exports = router;

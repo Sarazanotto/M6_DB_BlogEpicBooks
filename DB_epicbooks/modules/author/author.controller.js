@@ -64,7 +64,20 @@ const create = async (req, res, next) => {
   }
 };
 
-const uploadFileCloudinary = async (req, res, next) => {
+const uploadFile = async (req, res,next) => {
+ try {
+if(!req.file){
+  return res.status(400).send({message:'File mancante', statusCode:400})
+}
+const url=req.file.path
+
+res.status(200).json({statusCode:200,avatar:url})
+  } catch (error) {
+    next(error)
+  }
+};
+
+const uploadFileId = async (req, res, next) => {
   try {
 const {id}= req.params
 const url=req.file.path
@@ -117,7 +130,8 @@ module.exports = {
   findAll,
   findOne,
   create,
-  uploadFileCloudinary,
+  uploadFile,
+  uploadFileId,
   modify,
   deleteUser,
 };

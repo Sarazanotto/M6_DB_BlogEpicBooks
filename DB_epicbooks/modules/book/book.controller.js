@@ -92,18 +92,15 @@ const create = async (req, res,next) => {
 };
 
 const uploadFile = async (req, res,next) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ statusCode: 400, message: "Missing file" });
-    }
-    const url = `${req.protocol}://${req.get("host")}`;
-    const fileName = req.file.filename;
+ try {
+if(!req.file){
+  return res.status(400).send({message:'File mancante', statusCode:400})
+}
+const url=req.file.path
 
-    res.status(200).json({
-      cover: `${url}/uploads/${fileName}`,
-    });
+res.status(200).json({statusCode:200,cover:url})
   } catch (error) {
-       next(error)
+    next(error)
   }
 };
 
@@ -113,9 +110,7 @@ const uploadFileId = async (req, res,next) => {
       return res.status(400).json({ statusCode: 400, message: "Missing file" });
     }
     const { id } = req.params;
-    const url = `${req.protocol}://${req.get("host")}/uploads/${
-      req.file.filename
-    }`;
+    const url = req.file.path
     const updateBook = await bookService.bookUploadCover(id, url);
     res.status(200).json({ statusCode: 200, updateBook });
   } catch (error) {

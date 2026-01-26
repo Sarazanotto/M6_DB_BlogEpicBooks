@@ -19,11 +19,13 @@ const {
   initInstagramPassport,
 } = require("./modules/oauth/instagram/insta.config");
 const app = express();
-const authMiddelware = require("./middlewares/authentication/authUser");
+
 //middleware
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
-app.use(cors());
+app.use(cors({
+  origin:['https://blog-epic-books.vercel.app/','http://localhost:5173']
+}));
 
 app.use(
   session({
@@ -44,7 +46,7 @@ app.use("/", authorRoute);
 app.use("/", googleRoute);
 app.use("/", instagramRoute);
 app.use("/", bookRoute);
-//app.use(authMiddelware);
+
 
 
 app.use("/", commentRoute);

@@ -1,15 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const bookController = require("./book.controller");
+const { cloudBook } = require("../../middlewares/uploads/index.js");
+const auth= require ('../../middlewares/authentication/authUser.js')
 
-const {upload}= require ('../../middlewares/uploads/index.js')
+router.get("/books",auth, bookController.findAll);
+router.get("/books/:id",auth, bookController.findOne);
+router.post(
+  "/books/upload",auth,
+  cloudBook.single("cover"),
+  bookController.uploadFile,
+);
+router.post("/books",auth, bookController.create);
+router.patch(
+  "/books/:id/uploadCover",auth,
+  cloudBook.single("cover"),
+  bookController.uploadFileId,
+);
+router.patch("/books/:id",auth, bookController.modify);
 
-;
-router.get("/books", bookController.findAll);
-router.get("/books/:id", bookController.findOne);
-router.post("/books", bookController.create);
-router.post('/books/upload', upload.single('cover'),bookController.uploadFile)
-router.patch("/books/:id", bookController.modify);
-router.delete("/books/:id", bookController.deleteOne);
-router.patch("/books/:id/uploadCover",upload.single('cover'),bookController.uploadFileId)
+router.delete("/books/:id",auth, bookController.deleteOne);
+
 module.exports = router;

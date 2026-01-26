@@ -1,4 +1,4 @@
-const bookSchema = require("./book.schema");
+
 const BookSchema = require("./book.schema");
 
 const bookAll = async (page, pageSize) => {
@@ -42,6 +42,7 @@ const bookUploadCover= async (id, url)=>{
   return book
 }
 
+
 const bookModify = async (id, body) => {
   const book = await BookSchema.findByIdAndUpdate(id, body, { new: true });
   return book;
@@ -54,7 +55,7 @@ const bookDelete = async (id) => {
 
 
 const uploadAllDocuments= async()=>{
-  return await bookSchema.updateMany(
+  return await BookSchema.updateMany(
     {comments:{$exists: false}},
     {$set:{comments:[]}}
   
@@ -69,5 +70,6 @@ module.exports = {
   bookModify,
   bookUploadCover,
   bookDelete,
-  uploadAllDocuments
+  uploadAllDocuments,
+  
 };
